@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using System.Diagnostics;
 
 static class Program
 {
@@ -62,8 +63,13 @@ static class Program
         p.OutputDataReceived += (sender, args) => Console.WriteLine($"{DateTime.Now:o}|Tycho|Data: {args.Data}");
         p.ErrorDataReceived += (sender, args) => Console.Error.WriteLine($"{DateTime.Now:o}|Tycho|Error: {args.Data}");
         p.Start();
+        p.WaitForExit();
 
         Console.WriteLine($"{DateTime.Now:o}|DirectoryProccessed|Path:{inputPath}");
+        new ToastContentBuilder()
+            .AddText("Tycho processed")
+            .AddText(inputPath)
+            .Show();
     }
 
     private static void Watcher_Created(object sender, FileSystemEventArgs e)
