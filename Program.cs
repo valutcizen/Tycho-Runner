@@ -11,7 +11,7 @@ static class Program
     private static void Main(string[] args)
     {
         if (args.Length != 3)
-            Console.WriteLine("Usage: tycho-runner [input] [output] [tycho-exe]");
+            Console.WriteLine("Usage: tycho-runner <input> <output> <tycho-exe>");
 
         Console.WriteLine($"{DateTime.Now:o}|Start|Input:{args[0]}|Output:{args[1]}|Tycho:{args[2]}");
 
@@ -50,7 +50,7 @@ static class Program
         var psi = new ProcessStartInfo
         {
             FileName = tychoExe,
-            Arguments = $"\"{inputPath}\"",
+            Arguments = $"1 \"{inputPath}\"",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
