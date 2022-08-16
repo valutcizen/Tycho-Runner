@@ -41,6 +41,7 @@ static class Program
             oldestDir.MoveTo(newDirPath);
             Console.WriteLine($"{DateTime.Now:o}|DirectoryMoved|Path:{oldestDir.FullName}");
 
+            Thread.Sleep(2 * 60 * 1000);
             ExecuteTyco(oldestDir.FullName);
         }
     }
@@ -63,6 +64,8 @@ static class Program
         p.OutputDataReceived += (sender, args) => Console.WriteLine($"{DateTime.Now:o}|Tycho|Data: {args.Data}");
         p.ErrorDataReceived += (sender, args) => Console.Error.WriteLine($"{DateTime.Now:o}|Tycho|Error: {args.Data}");
         p.Start();
+        Console.WriteLine($"{DateTime.Now:o}|DirectoryProccessingStarted|Path:{inputPath}");
+
         p.WaitForExit();
 
         Console.WriteLine($"{DateTime.Now:o}|DirectoryProccessed|Path:{inputPath}");
