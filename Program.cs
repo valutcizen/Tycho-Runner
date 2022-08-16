@@ -30,11 +30,18 @@ static class Program
 
     private static void ProccessNewDirectories()
     {
-        while (input.EnumerateDirectories().Skip(1).Any())
+        DirectoryInfo[] dirs;
+        while ((dirs = input.GetDirectories()).Length > 1)
         {
-            var oldestDir = input.EnumerateDirectories()
-                .OrderBy(d => d.CreationTime)
-                .First();
+            if (dirs.Length == 2)
+            {
+                Console.WriteLine($"{DateTime.Now:o}|Waiting|Only2DirsFound");
+                Thread.Sleep(30 * 1000);
+            }
+
+            var oldestDir = dirs
+                .Aggregate((d1, d2) => d1.CreationTime < d2.CreationTime ? d1 : d2);
+
             Console.WriteLine($"{DateTime.Now:o}|NewDirectoryFound|Path:{oldestDir.FullName}");
 
             var newDirPath = Path.Combine(output.FullName, oldestDir.Name);
@@ -75,11 +82,14 @@ static class Program
             .Show();
     }
 
+    private static int isProcessing = 0;
     private static void Watcher_Created(object sender, FileSystemEventArgs e)
     {
-        lock (inputDirLock) 
+        var isProc = Interlocked.Exchange(ref isProcessing, 1);
+        if (isProc == 0)
         {
             ProccessNewDirectories();
+            Interlocked.Exchange(ref isProcessing, 0);
         }
     }
 }
